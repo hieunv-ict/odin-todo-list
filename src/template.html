@@ -3,9 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage</title>
+    <title>Todo List</title>
 </head>
 <body>
-    <h1>Odin Project</h1>
+    <div>
+        <h1>Add New Task</h1>
+        <button class="btn new-task-btn">Add</button>
+    </div>
+
+    <dialog class="new-task-dialog">
+        <form method="dialog" class="new-task-form">
+            <input type="text" id="task-title" name="task-title" placeholder="Task Title" required class="input">
+            <textarea name="task-description" id="task-description" value="" class="input"></textarea>
+            <input type="date" name="task-date" id="task-date" required class="input">
+            <p>
+                <select name="priority" id="pirority" required class="input">
+                    <option value="">Choose priority</option>
+                    <option value="High">High priority</option>
+                    <option value="Normal">Normal priority</option>
+                    <option value="Low">Low priority</option>
+                </select>
+            </p>
+            <button type="submit" class="cancel-btn btn">Cancel</button>
+            <button type="submit" class="add-task-btn btn">Add</button>
+            
+        </form>
+    </dialog>
 </body>
 </html>
