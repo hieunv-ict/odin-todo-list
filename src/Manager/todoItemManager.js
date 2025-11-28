@@ -1,6 +1,6 @@
-import { Task } from "./task";
+import { Task } from "../task";
 import { addTaskToProject } from "./projectManager";
-import { observer } from "./observer";
+import { observer } from "../Tools/observer";
 let newTaskDialog = document.querySelector(".new-task-dialog");
 let addTaskForm = newTaskDialog.querySelector(".new-task-form");
 let cancelBtn = addTaskForm.querySelector(".cancel-btn");

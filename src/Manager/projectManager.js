@@ -1,5 +1,5 @@
-import { observer } from "./observer";
-import { Project } from "./project";
+import { observer } from "../Tools/observer";
+import { Project } from "../project";
 
 export let projectList = {};
 let defaultProject = new Project();
