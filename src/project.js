@@ -1,4 +1,4 @@
-import { observer } from "./observer";
+import { observer } from "./Tools/observer";
 
 export class Project{
     #taskList;
