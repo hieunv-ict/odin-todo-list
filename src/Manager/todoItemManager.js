@@ -8,11 +8,10 @@ let cancelBtn = addTaskForm.querySelector(".cancel-btn");
 cancelBtn.addEventListener("click", e =>{e.preventDefault(); newTaskDialog.close()});
  // submit button clicked with all input filled -> create new task 
 addTaskForm.addEventListener("submit", e =>{
-    let taskTitle = addTaskForm.querySelector("#task-title").value;
-    let taskPriority = addTaskForm.querySelector("#task-priority").value;
-    let taskDate = addTaskForm.querySelector("#task-date").value;
-    let taskDesc = addTaskForm.querySelector("#task-description").value;
-    addTaskToDefaultProject(taskTitle, taskDate, taskPriority, taskDesc);
+    //create task, display task and add to project
+    let task = createTask();
+    addTaskToProject(task, "default");
+    displayTask(task);
 
 });
 // open form for adding task
@@ -20,12 +19,18 @@ export function openNewTaskForm(){
     // open dialog form
     newTaskDialog.showModal();
 }
-//create task
-function addTaskToDefaultProject(title, date, priority, description){
-    // store task to project's task list
-    let task = new Task(title, date, priority);
-    task.description = description;
-    addTaskToProject(task, "default");
+
+function createTask(){
+    // create new Task object
+    let taskTitle = addTaskForm.querySelector("#task-title").value;
+    let taskPriority = addTaskForm.querySelector("#task-priority").value;
+    let taskDate = addTaskForm.querySelector("#task-date").value;
+    let taskDesc = addTaskForm.querySelector("#task-description").value;
+    let task = new Task(taskTitle, taskDate, taskPriority, taskDesc);
+    return task;
+}
+
+function displayTask(task){
     // display new task to the page
     let taskContainer = document.querySelector(".task-container");
     taskContainer.appendChild(createTaskElement(task));
@@ -33,7 +38,7 @@ function addTaskToDefaultProject(title, date, priority, description){
 
 }
 
-function createTaskElement(task){
+export function createTaskElement(task){
         // button for completing task
         let completeBtn = document.createElement("button");
         completeBtn.textContent = "Complete";

@@ -1,5 +1,6 @@
 import { observer } from "../Tools/observer";
 import { Project } from "../project";
+import { createTaskElement } from "./todoItemManager";
 
 export let projectList = {};
 let defaultProject = new Project();
@@ -29,7 +30,9 @@ addPrjForm.addEventListener("submit", e =>{
     if (!projectList[prjTitle]){
         projectList[prjTitle] = newPrj;
         let prjContainer = document.querySelector(".prj-container");
-        prjContainer.appendChild(createPrjItem(newPrj));
+        let prjItem = createPrjItem(newPrj);
+        prjItem.querySelector(".prj-title").addEventListener("click", e=> openProject(newPrj));
+        prjContainer.appendChild(prjItem);
     }
     else{
         throw new Error(`Project ${prjTitle} has existed.`);
@@ -40,7 +43,6 @@ export function addNewProject(){
 }
 
 function createPrjItem(prj){
-    console.log(prj);
     let deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Delete";
     deleteBtn.addEventListener("click", e => deleteProject(prj));
@@ -48,6 +50,7 @@ function createPrjItem(prj){
     let prjCard = document.createElement("div");
     prjCard.classList.add("prj-item");
     let prjTitle = document.createElement("h3");
+    prjTitle.classList.add("prj-title");
     prjTitle.textContent = prj.prjName;
 
     prjCard.appendChild(prjTitle);
@@ -68,5 +71,23 @@ function deleteProject(prj){
             card.remove();
             break;
         }
+    }
+}
+
+function openProject(project){
+    // open project page
+
+    
+
+    //clear tasks and button on the page
+    let mainContent = document.querySelector(".main-container.content");
+    mainContent.removeChild();
+    // project page has an add task button for only that project
+    let addTaskBtn = document.createElement("button");
+    addTaskBtn.textContent = "Add Task";
+    // addTaskBtn.addEventListener("click", e =>)
+    //render tasks of the chosen projecct
+    for (let task of project.taskList){
+        createTaskElement(task);
     }
 }
