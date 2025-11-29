@@ -8,15 +8,12 @@ export class Task{
     #id;
     project;
     #htmlCard;
-    constructor(title, date, priority){
+    constructor(title, date, priority, description){
         this.#title = title;
         this.#date = date;
         this.#priority = priority;
+        this.#description = description;
         this.#id = crypto.randomUUID();
-    }
-
-    set description(content){
-        this.#description = content;
     }
 
     get description(){

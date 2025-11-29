@@ -19,8 +19,6 @@
     width: 30vw;
     height: 22vh;
     padding: 8px 12px;
-    display: flex;
-    align-items: center;
 }
 .new-task-form{
     display: flex;
@@ -50,4 +48,10 @@
     height: 3vh;
     width: 100%;
     font-size: 1rem;
+}
+
+.prj-item{
+    background-color: burlywood;
+    display: flex;
+    justify-content: space-between;
 }
