@@ -1,13 +1,11 @@
-import { observer } from "../Tools/observer";
 import { Project } from "../project";
-import { createTaskElement, initAddTask, openNewTaskForm } from "./todoItemManager";
-
-export let projectList = {};
-export const DEFAULT_PROJECT_NAME = "General";
-let defaultProject = new Project(DEFAULT_PROJECT_NAME);
-projectList[DEFAULT_PROJECT_NAME] = defaultProject;
-
+import { createTaskElement, initAddTask, openNewTaskForm } from "./todoDOM";
+import { projectList, DEFAULT_PROJECT_NAME } from "../projectManager";
 let prjContainer = document.querySelector(".prj-container");
+
+//display default project tasks and list of projects when the page is loaded
+openProject(projectList[DEFAULT_PROJECT_NAME]);
+displayAllProjects();
 //display list of projects on sidebar
 function displayAllProjects(){
     for (let prj in projectList){
@@ -15,17 +13,6 @@ function displayAllProjects(){
         let prjItem = createPrjItem(projectObj);
         prjItem.querySelector(".prj-title").addEventListener("click", e=> openProject(projectObj));
         prjContainer.appendChild(prjItem);
-    }
-}
-displayAllProjects();
-export function addTaskToProject(task, prjName){
-    if (projectList[prjName]){
-        projectList[prjName].taskList.push(task);
-        observer.add("Complete Task", projectList[prjName].removeTask.bind(projectList[prjName]));
-        task.project = prjName;
-    }
-    else{
-        throw new Error("Cannot found project " + prjName);
     }
 }
 
@@ -91,23 +78,27 @@ function openProject(project){
     while(mainContent.firstChild){
         mainContent.removeChild(mainContent.firstChild);
     }
+
     //project title
     let prjTitle = document.createElement("h2");
     prjTitle.textContent = project.prjName;
+
     // project page has an add task button for only that project
     let addTaskBtn = document.createElement("button");
     addTaskBtn.textContent = "Add Task";
     addTaskBtn.classList.add(".new-task-btn");
     initAddTask(project.prjName);
     addTaskBtn.addEventListener("click", e => openNewTaskForm());
+
     //render tasks of the chosen projecct and other elements
-    
     mainContent.appendChild(prjTitle);
     let taskContainer = document.createElement("div");
     taskContainer.classList.add("task-container");
     mainContent.appendChild(taskContainer);
-    for (let task of project.taskList){
-        let taskCard = createTaskElement(task);
+
+    let projectTasks = project.taskList;
+    for (let i = 0; i < projectTasks.length; i++){
+        let taskCard = createTaskElement(projectTasks[i]);
         taskContainer.appendChild(taskCard);
     }
     mainContent.appendChild(addTaskBtn);
