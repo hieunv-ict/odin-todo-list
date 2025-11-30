@@ -1,20 +1,18 @@
-import { observer } from "../Tools/observer";
 import { Project } from "../project";
-import { createTaskElement } from "./todoItemManager";
+import { createTaskElement, initAddTask, openNewTaskForm } from "./todoDOM";
+import { projectList, DEFAULT_PROJECT_NAME } from "../projectManager";
+let prjContainer = document.querySelector(".prj-container");
 
-export let projectList = {};
-let defaultProject = new Project();
-projectList["default"] = defaultProject;
-
-
-export function addTaskToProject(task, prjName){
-    if (projectList[prjName]){
-        projectList[prjName].taskList.push(task);
-        observer.add("Complete Task", projectList[prjName].removeTask.bind(projectList[prjName]));
-        task.project = prjName;
-    }
-    else{
-        throw new Error("Cannot found project " + prjName);
+//display default project tasks and list of projects when the page is loaded
+openProject(projectList[DEFAULT_PROJECT_NAME]);
+displayAllProjects();
+//display list of projects on sidebar
+function displayAllProjects(){
+    for (let prj in projectList){
+        let projectObj = projectList[prj]
+        let prjItem = createPrjItem(projectObj);
+        prjItem.querySelector(".prj-title").addEventListener("click", e=> openProject(projectObj));
+        prjContainer.appendChild(prjItem);
     }
 }
 
@@ -29,7 +27,6 @@ addPrjForm.addEventListener("submit", e =>{
     let newPrj = new Project(prjTitle);
     if (!projectList[prjTitle]){
         projectList[prjTitle] = newPrj;
-        let prjContainer = document.querySelector(".prj-container");
         let prjItem = createPrjItem(newPrj);
         prjItem.querySelector(".prj-title").addEventListener("click", e=> openProject(newPrj));
         prjContainer.appendChild(prjItem);
@@ -74,20 +71,36 @@ function deleteProject(prj){
     }
 }
 
+// open project page to display project's task
 function openProject(project){
-    // open project page
-
-    
-
     //clear tasks and button on the page
-    let mainContent = document.querySelector(".main-container.content");
-    mainContent.removeChild();
+    let mainContent = document.querySelector(".main-container > .content");
+    while(mainContent.firstChild){
+        mainContent.removeChild(mainContent.firstChild);
+    }
+
+    //project title
+    let prjTitle = document.createElement("h2");
+    prjTitle.textContent = project.prjName;
+
     // project page has an add task button for only that project
     let addTaskBtn = document.createElement("button");
     addTaskBtn.textContent = "Add Task";
-    // addTaskBtn.addEventListener("click", e =>)
-    //render tasks of the chosen projecct
-    for (let task of project.taskList){
-        createTaskElement(task);
+    addTaskBtn.classList.add(".new-task-btn");
+    initAddTask(project.prjName);
+    addTaskBtn.addEventListener("click", e => openNewTaskForm());
+
+    //render tasks of the chosen projecct and other elements
+    mainContent.appendChild(prjTitle);
+    let taskContainer = document.createElement("div");
+    taskContainer.classList.add("task-container");
+    mainContent.appendChild(taskContainer);
+
+    let projectTasks = project.taskList;
+    for (let i = 0; i < projectTasks.length; i++){
+        let taskCard = createTaskElement(projectTasks[i]);
+        taskContainer.appendChild(taskCard);
     }
+    mainContent.appendChild(addTaskBtn);
+
 }
