@@ -19,17 +19,29 @@ export class Task{
     get description(){
         return this.#description;
     }
+    set description(desc){
+        this.#description = desc;
+    }
 
     get title(){
         return this.#title;
+    }
+    set title(val){
+        this.#title = val;
     }
 
     get priority(){
         return this.#priority;
     }
+    set priority(val){
+        this.#priority = val;
+    }
 
     get date(){
         return this.#date;
+    }
+    set date(val){
+        this.#date = val;
     }
     get id(){
         return this.#id;

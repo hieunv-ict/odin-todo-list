@@ -1,5 +1,5 @@
-import { observer } from "./Tools/observer";
-import { Project } from "./project";
+import { observer } from "../Tools/observer";
+import { Project } from "../project";
 export let projectList = {};
 export const DEFAULT_PROJECT_NAME = "General";
 let defaultProject = new Project(DEFAULT_PROJECT_NAME);
