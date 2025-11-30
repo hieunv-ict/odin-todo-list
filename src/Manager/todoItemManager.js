@@ -1,31 +1,39 @@
 import { Task } from "../task";
-import { addTaskToProject } from "./projectManager";
+import { addTaskToProject, DEFAULT_PROJECT_NAME } from "./projectManager";
 import { observer } from "../Tools/observer";
-let newTaskDialog = document.querySelector(".new-task-dialog");
-let addTaskForm = newTaskDialog.querySelector(".new-task-form");
-let cancelBtn = addTaskForm.querySelector(".cancel-btn");
-// cancel button clicked -> close the dialog and not create new task
-cancelBtn.addEventListener("click", e =>{e.preventDefault(); newTaskDialog.close()});
- // submit button clicked with all input filled -> create new task 
-addTaskForm.addEventListener("submit", e =>{
-    //create task, display task and add to project
-    let task = createTask();
-    addTaskToProject(task, "default");
-    displayTask(task);
 
-});
+let newTaskDialog = document.querySelector(".new-task-dialog");
+
+
+export function initAddTask(projectName){
+    let addTaskForm = newTaskDialog.querySelector(".new-task-form");
+    let cancelBtn = addTaskForm.querySelector(".cancel-btn");
+    // cancel button clicked -> close the dialog and not create new task
+    cancelBtn.addEventListener("click", e =>{e.preventDefault(); newTaskDialog.close()});
+    // submit button clicked with all input filled -> create new task 
+    let formClone = addTaskForm.cloneNode(true);
+    addTaskForm.parentNode.replaceChild(formClone, addTaskForm);
+    formClone.addEventListener("submit", e =>{
+        //create task, display task and add to default project
+        let task = createTask(formClone);
+        addTaskToProject(task, projectName);
+        displayTask(task);
+    });
+}
+
+initAddTask(DEFAULT_PROJECT_NAME);
 // open form for adding task
 export function openNewTaskForm(){
     // open dialog form
     newTaskDialog.showModal();
 }
 
-function createTask(){
+function createTask(form){
     // create new Task object
-    let taskTitle = addTaskForm.querySelector("#task-title").value;
-    let taskPriority = addTaskForm.querySelector("#task-priority").value;
-    let taskDate = addTaskForm.querySelector("#task-date").value;
-    let taskDesc = addTaskForm.querySelector("#task-description").value;
+    let taskTitle = form.querySelector("#task-title").value;
+    let taskPriority = form.querySelector("#task-priority").value;
+    let taskDate = form.querySelector("#task-date").value;
+    let taskDesc = form.querySelector("#task-description").value;
     let task = new Task(taskTitle, taskDate, taskPriority, taskDesc);
     return task;
 }
