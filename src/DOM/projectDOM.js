@@ -1,11 +1,16 @@
 import { Project } from "../project";
 import { createTaskElement, initAddTask, openNewTaskForm } from "./todoDOM";
 import { projectList, DEFAULT_PROJECT_NAME } from "../Manager/projectManager";
+import { observer } from "../Tools/observer";
+import { deleteProject } from "../Manager/projectManager";
 let prjContainer = document.querySelector(".prj-container");
 
 //display default project tasks and list of projects when the page is loaded
-openProject(projectList[DEFAULT_PROJECT_NAME]);
-displayAllProjects();
+export function displayData(){
+    openProject(projectList[DEFAULT_PROJECT_NAME]);
+    displayAllProjects();
+}
+//displayData();
 //display list of projects on sidebar
 function displayAllProjects(){
     for (let prj in projectList){
@@ -30,6 +35,7 @@ addPrjForm.addEventListener("submit", e =>{
         let prjItem = createPrjItem(newPrj);
         prjItem.querySelector(".prj-title").addEventListener("click", e=> openProject(newPrj));
         prjContainer.appendChild(prjItem);
+        observer.emit("Save Data", projectList);
     }
     else{
         throw new Error(`Project ${prjTitle} has existed.`);
@@ -40,28 +46,26 @@ export function addNewProject(){
 }
 
 function createPrjItem(prj){
+    observer.add("Delete Project", deleteProjectElem);
     let deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Delete";
-    deleteBtn.addEventListener("click", e => deleteProject(prj));
+    deleteBtn.addEventListener("click", e => deleteProject(prj.name));
 
     let prjCard = document.createElement("div");
     prjCard.classList.add("prj-item");
     let prjTitle = document.createElement("h3");
     prjTitle.classList.add("prj-title");
-    prjTitle.textContent = prj.prjName;
+    prjTitle.textContent = prj.name;
 
     prjCard.appendChild(prjTitle);
     prjCard.appendChild(deleteBtn);
     return prjCard;
 }
 
-function deleteProject(prj){
-    let name = prj.prjName;
-    // delete project from project list
-    delete projectList[name];
+function deleteProjectElem(prj){
+    let name = prj.name;
     // remove project card from display
     let prjCards = document.querySelectorAll(".prj-item");
-
     for (let card of prjCards){
         let title = card.querySelector("h3").textContent;
         if (title === name){
@@ -81,13 +85,13 @@ function openProject(project){
 
     //project title
     let prjTitle = document.createElement("h2");
-    prjTitle.textContent = project.prjName;
-
+    prjTitle.textContent = project.name;
+    prjTitle.classList.add("prj-title-content");
     // project page has an add task button for only that project
     let addTaskBtn = document.createElement("button");
     addTaskBtn.textContent = "Add Task";
     addTaskBtn.classList.add(".new-task-btn");
-    initAddTask(project.prjName);
+    initAddTask(project.name);
     addTaskBtn.addEventListener("click", e => openNewTaskForm());
 
     //render tasks of the chosen projecct and other elements

@@ -18,12 +18,13 @@ export function initAddTask(projectName){
     formClone.addEventListener("submit", e =>{
         //create task, display task and add to default project
         let task = createTask(formClone);
+        console.log(projectName);
         addTaskToProject(task, projectName);
         displayTask(task);
     });
 }
 
-initAddTask(DEFAULT_PROJECT_NAME);
+//initAddTask(DEFAULT_PROJECT_NAME);
 // open form for adding task
 export function openNewTaskForm(){
     // open dialog form
@@ -67,7 +68,7 @@ export function createTaskElement(task){
     let cardTitle = document.createElement("h2");
     cardTitle.textContent = task.title;
     let cardDate = document.createElement("p");
-    cardDate.textContent = task.date;
+    cardDate.textContent = "Due date: " + task.date;
     //hidden element
     let hiddenDetails = document.createElement("div");
     hiddenDetails.classList.add("details");
@@ -75,7 +76,7 @@ export function createTaskElement(task){
     cardDesc.textContent = task.description;
     let editBtn = document.createElement("button");
     editBtn.textContent = "Edit";
-    editBtn.addEventListener("click", e => editTask(task, taskCard));
+    editBtn.addEventListener("click", e => {editTask(task, taskCard);});
     hiddenDetails.appendChild(cardDesc);
     hiddenDetails.appendChild(editBtn);
     // add data attribute of task id to task card
@@ -131,9 +132,13 @@ function editTask(task, taskCard){
         //reflect the change to the task element
         let newTaskCard = createTaskElement(task);
         taskCard.parentNode.replaceChild(newTaskCard, taskCard);
-
+        saveTask(task);
     });
     newTaskDialog.showModal();
+}
+
+function saveTask(task){
+    saveTaskToProject();
 }
 
 
