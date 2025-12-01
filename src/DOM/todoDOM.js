@@ -1,7 +1,6 @@
 import { Task } from "../task";
-import { addTaskToProject, DEFAULT_PROJECT_NAME } from "../Manager/projectManager";
+import { addTaskToProject, saveTaskChanged } from "../Manager/projectManager";
 import { observer } from "../Tools/observer";
-
 export function initAddTask(projectName){
     let newTaskDialog = document.querySelector(".new-task-dialog");
     let addTaskForm = newTaskDialog.querySelector(".new-task-form");
@@ -18,7 +17,6 @@ export function initAddTask(projectName){
     formClone.addEventListener("submit", e =>{
         //create task, display task and add to default project
         let task = createTask(formClone);
-        console.log(projectName);
         addTaskToProject(task, projectName);
         displayTask(task);
     });
@@ -34,7 +32,6 @@ export function openNewTaskForm(){
 function priorityClass(task){
     let pri = task.priority;
     let res = pri.toLowerCase() + "-priority";
-    console.log(res);
     return res;
 }
  // create new Task object
@@ -48,7 +45,7 @@ function createTask(form){
 }
 
 // display new task to the page
-function displayTask(task){
+export function displayTask(task){
     let taskContainer = document.querySelector(".task-container");
     let taskElem = createTaskElement(task);
     taskContainer.appendChild(taskElem);
@@ -59,7 +56,7 @@ function displayTask(task){
 export function createTaskElement(task){
     let completeBtn = document.createElement("button");
     completeBtn.textContent = "Complete";
-    completeBtn.addEventListener("click", e => task.completeTask());
+    completeBtn.addEventListener("click", task.completeTask.bind(task));
 
     //main element
     let taskCard = document.createElement("div");
@@ -88,7 +85,7 @@ export function createTaskElement(task){
     
     collapsibleElem(hiddenDetails);
     function collapsibleElem(content){
-        taskCard.addEventListener("click", e =>{
+        cardTitle.addEventListener("click", e =>{
             if (content.style.display === "block") {
             content.style.display = "none";
             } 
@@ -132,13 +129,13 @@ function editTask(task, taskCard){
         //reflect the change to the task element
         let newTaskCard = createTaskElement(task);
         taskCard.parentNode.replaceChild(newTaskCard, taskCard);
-        saveTask(task);
+        saveTask();
     });
     newTaskDialog.showModal();
 }
 
-function saveTask(task){
-    saveTaskToProject();
+function saveTask(){
+    saveTaskChanged();
 }
 
 
@@ -148,7 +145,7 @@ function removeTaskElement(task){
     for (let item of tasks){
         if (task.id === item.dataset.id){
             item.remove();
-            observer.remove("Complete Task", removeTaskElement);
+            // observer.remove("Complete Task", removeTaskElement);
             break;
         }
     }

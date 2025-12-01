@@ -2,6 +2,7 @@ import { displayData } from "../DOM/projectDOM";
 import { projectList } from "../Manager/projectManager";
 import { observer } from "./observer";
 import { setProjectList } from "../Manager/projectManager";
+import { replacer, reviver } from "./serialize";
 function storageAvailable(type) {
   let storage;
   try {
@@ -33,22 +34,31 @@ export function loadLocalStorage(){
 
 function loadData(){
     observer.add("Save Data", populateStorage);
-    if (!localStorage.getItem("projects")){
+    if (localStorage.length === 0){
         populateStorage(projectList);
+        displayData();
     }
     else{
         setData();
     }
 }
 
-function populateStorage(data){
-    let jsonData = JSON.stringify(data);
-    localStorage.setItem("projects", jsonData);
+function populateStorage(dict){
+    for (let key in dict){
+      let jsonVal = JSON.stringify(dict[key]);
+      localStorage.setItem(key, jsonVal);
+    }
+    
 }
 
 function setData(){
-    let jsonText = localStorage.getItem("projects");
-    let tmpList = JSON.parse(jsonText);
+    let len = localStorage.length;
+    let tmpList = {};
+    for (let i = 0; i < len; i++){
+      let jsonText = localStorage.getItem(localStorage.key(i));
+      let project = JSON.parse(jsonText);
+      tmpList[localStorage.key(i)] = project; 
+    }
     setProjectList(tmpList);
     displayData();
 }

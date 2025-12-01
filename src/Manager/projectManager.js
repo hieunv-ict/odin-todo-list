@@ -1,5 +1,6 @@
 import { observer } from "../Tools/observer";
 import { Project } from "../project";
+import { Task } from "../task";
 export let projectList = {};
 export const DEFAULT_PROJECT_NAME = "General";
 let defaultProject = new Project(DEFAULT_PROJECT_NAME);
@@ -10,17 +11,15 @@ observer.add("Delete Project", removeProject);
 // add task to a project
 export function addTaskToProject(task, prjName){
     let prj = projectList[prjName];
-    console.log(projectList);
     if (prj){
         prj.taskList.push(task);
-        observer.add("Complete Task", prj.removeTask.bind(prj));
         observer.emit("Save Data", projectList);
     }
     else{
         throw new Error("Cannot found project " + prjName);
     }
 }
-export function saveTaskToProject(){
+export function saveTaskChanged(){
     observer.emit("Save Data", projectList);
 }
 
@@ -36,8 +35,16 @@ function removeProject(project){
 export function setProjectList(tmpList){
     for (let prj in tmpList){
         let newPrj = new Project(tmpList[prj].name);
-        newPrj.taskList = tmpList[prj].taskList;
+        
+        for (let item of tmpList[prj].taskList){
+            let task = new Task();
+            Object.assign(task, item);
+            newPrj.addTask(task);
+        }
         projectList[prj] = newPrj;
+        
     }
 }
+
+
 

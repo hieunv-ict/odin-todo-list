@@ -1,5 +1,5 @@
 import { Project } from "../project";
-import { createTaskElement, initAddTask, openNewTaskForm } from "./todoDOM";
+import { createTaskElement, displayTask, initAddTask, openNewTaskForm } from "./todoDOM";
 import { projectList, DEFAULT_PROJECT_NAME } from "../Manager/projectManager";
 import { observer } from "../Tools/observer";
 import { deleteProject } from "../Manager/projectManager";
@@ -77,6 +77,7 @@ function deleteProjectElem(prj){
 
 // open project page to display project's task
 function openProject(project){
+    observer.add("Complete Task", project.removeTask.bind(project));
     //clear tasks and button on the page
     let mainContent = document.querySelector(".main-container > .content");
     while(mainContent.firstChild){
@@ -95,6 +96,7 @@ function openProject(project){
     addTaskBtn.addEventListener("click", e => openNewTaskForm());
 
     //render tasks of the chosen projecct and other elements
+
     mainContent.appendChild(prjTitle);
     let taskContainer = document.createElement("div");
     taskContainer.classList.add("task-container");
@@ -102,8 +104,7 @@ function openProject(project){
 
     let projectTasks = project.taskList;
     for (let i = 0; i < projectTasks.length; i++){
-        let taskCard = createTaskElement(projectTasks[i]);
-        taskContainer.appendChild(taskCard);
+        displayTask(projectTasks[i]);
     }
     mainContent.appendChild(addTaskBtn);
 
