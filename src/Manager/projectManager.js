@@ -1,12 +1,12 @@
 import { observer } from "../Tools/observer";
 import { Project } from "../project";
 import { Task } from "../task";
+import { loadLocalStorage } from "../Tools/localStorage";
 export let projectList = {};
 export const DEFAULT_PROJECT_NAME = "General";
-let defaultProject = new Project(DEFAULT_PROJECT_NAME);
-projectList[DEFAULT_PROJECT_NAME] = defaultProject;
 
 
+loadLocalStorage();
 observer.add("Delete Project", removeProject);
 // add task to a project
 export function addTaskToProject(task, prjName){

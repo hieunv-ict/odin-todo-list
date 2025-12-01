@@ -3,7 +3,11 @@ let observer = {
     events: {},
     add: function(eventName, func){
         this.events[eventName] = this.events[eventName] || [];
-        this.events[eventName].push(func);
+        if (!this.checkDuplicateFunc(eventName, func)){
+
+            this.events[eventName].push(func);
+        }
+        
     },
 
     remove: function(eventName, func){
@@ -18,8 +22,18 @@ let observer = {
     emit: function(eventName, data){
         if (this.events[eventName])
         for (let func of this.events[eventName]){
+            console.log(func);
             func(data);
         }
+    },
+
+    checkDuplicateFunc: function(eventName, func){
+        for (let i = 0; i < this.events[eventName]; i++){
+            if (this.events[eventName][i] === func){
+                return true;
+            }
+        }
+        return false;
     }
 }
 

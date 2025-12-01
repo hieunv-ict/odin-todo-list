@@ -3,12 +3,15 @@ import { createTaskElement, displayTask, initAddTask, openNewTaskForm } from "./
 import { projectList, DEFAULT_PROJECT_NAME } from "../Manager/projectManager";
 import { observer } from "../Tools/observer";
 import { deleteProject } from "../Manager/projectManager";
-let prjContainer = document.querySelector(".prj-container");
 
-//display default project tasks and list of projects when the page is loaded
+let prjContainer = document.querySelector(".prj-container");
+observer.add("Delete Project", deleteProjectElem);
+//display first project and list of projects when the page is loaded
 export function displayData(){
-    openProject(projectList[DEFAULT_PROJECT_NAME]);
+    const firstKey = Object.keys(projectList)[0]
+    openProject(projectList[firstKey]);
     displayAllProjects();
+    
 }
 //displayData();
 //display list of projects on sidebar
@@ -46,7 +49,7 @@ export function addNewProject(){
 }
 
 function createPrjItem(prj){
-    observer.add("Delete Project", deleteProjectElem);
+    observer.add("Complete Task", prj.removeTask.bind(prj));
     let deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Delete";
     deleteBtn.addEventListener("click", e => deleteProject(prj.name));
@@ -77,7 +80,7 @@ function deleteProjectElem(prj){
 
 // open project page to display project's task
 function openProject(project){
-    observer.add("Complete Task", project.removeTask.bind(project));
+    
     //clear tasks and button on the page
     let mainContent = document.querySelector(".main-container > .content");
     while(mainContent.firstChild){

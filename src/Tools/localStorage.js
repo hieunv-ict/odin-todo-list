@@ -2,7 +2,8 @@ import { displayData } from "../DOM/projectDOM";
 import { projectList } from "../Manager/projectManager";
 import { observer } from "./observer";
 import { setProjectList } from "../Manager/projectManager";
-import { replacer, reviver } from "./serialize";
+import { Project } from "../project";
+import { DEFAULT_PROJECT_NAME } from "../Manager/projectManager";
 function storageAvailable(type) {
   let storage;
   try {
@@ -33,14 +34,18 @@ export function loadLocalStorage(){
 }
 
 function loadData(){
-    observer.add("Save Data", populateStorage);
+    observer.add("Save Data", saveChange);
+    
     if (localStorage.length === 0){
+        let defaultProject = new Project(DEFAULT_PROJECT_NAME);
+        projectList[DEFAULT_PROJECT_NAME] = defaultProject;
         populateStorage(projectList);
-        displayData();
     }
     else{
-        setData();
+        deserialize();
     }
+    console.log(projectList);
+    displayData();
 }
 
 function populateStorage(dict){
@@ -48,10 +53,15 @@ function populateStorage(dict){
       let jsonVal = JSON.stringify(dict[key]);
       localStorage.setItem(key, jsonVal);
     }
-    
 }
 
-function setData(){
+function saveChange(projects){
+  localStorage.clear();
+  populateStorage(projects);
+}
+
+
+function deserialize(){
     let len = localStorage.length;
     let tmpList = {};
     for (let i = 0; i < len; i++){
@@ -60,5 +70,5 @@ function setData(){
       tmpList[localStorage.key(i)] = project; 
     }
     setProjectList(tmpList);
-    displayData();
+    
 }
