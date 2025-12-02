@@ -1,26 +1,35 @@
 import { Project } from "../project";
-import { createTaskElement, displayTask, initAddTask, openNewTaskForm } from "./todoDOM";
-import { projectList, DEFAULT_PROJECT_NAME } from "../Manager/projectManager";
+import { displayTask, initAddTask, openNewTaskForm, removeTaskElement } from "./todoDOM";
+import { DEFAULT_PROJECT_NAME, projectList } from "../Manager/projectManager";
 import { observer } from "../Tools/observer";
 import { deleteProject } from "../Manager/projectManager";
+import { loadLocalStorage } from "../Tools/localStorage";
 
 let prjContainer = document.querySelector(".prj-container");
 observer.add("Delete Project", deleteProjectElem);
 //display first project and list of projects when the page is loaded
 export function displayData(){
-    const firstKey = Object.keys(projectList)[0]
-    openProject(projectList[firstKey]);
+    if (projectList[DEFAULT_PROJECT_NAME]){
+        openProject(projectList[DEFAULT_PROJECT_NAME]);
+    }
+    else{
+        const firstKey = Object.keys(projectList)[0];
+        openProject(projectList[firstKey]);
+    }
+    
     displayAllProjects();
     
 }
 //displayData();
 //display list of projects on sidebar
 function displayAllProjects(){
-    for (let prj in projectList){
-        let projectObj = projectList[prj]
+    let len = Object.keys(projectList).length;
+    for (let i = 0; i < len; i++){
+        let projectObj = projectList[Object.keys(projectList)[i]];
         let prjItem = createPrjItem(projectObj);
         prjItem.querySelector(".prj-title").addEventListener("click", e=> openProject(projectObj));
         prjContainer.appendChild(prjItem);
+        observer.add("Complete Task", projectObj.removeTask.bind(projectObj));
     }
 }
 
@@ -67,6 +76,7 @@ function createPrjItem(prj){
 
 function deleteProjectElem(prj){
     let name = prj.name;
+    
     // remove project card from display
     let prjCards = document.querySelectorAll(".prj-item");
     for (let card of prjCards){
@@ -76,6 +86,16 @@ function deleteProjectElem(prj){
             break;
         }
     }
+    // open next available project if the deleted project is the same as displaying project
+    if (name === document.querySelector(".prj-title-content").textContent){
+        // remove all tasks of that project
+        while (prj.taskList.length > 0){
+            let task = prj.taskList[0];
+            removeTaskElement(task);
+        }
+        window.location.reload();
+    }
+    
 }
 
 // open project page to display project's task

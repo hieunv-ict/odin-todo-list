@@ -1,6 +1,6 @@
 import { observer } from "../Tools/observer";
 import { Project } from "../project";
-import { Task } from "../task";
+import { TodoTask } from "../task";
 import { loadLocalStorage } from "../Tools/localStorage";
 export let projectList = {};
 export const DEFAULT_PROJECT_NAME = "General";
@@ -19,6 +19,7 @@ export function addTaskToProject(task, prjName){
         throw new Error("Cannot found project " + prjName);
     }
 }
+
 export function saveTaskChanged(){
     observer.emit("Save Data", projectList);
 }
@@ -34,11 +35,12 @@ function removeProject(project){
 
 export function setProjectList(tmpList){
     for (let prj in tmpList){
+        console.log(prj);
         let newPrj = new Project(tmpList[prj].name);
         
         for (let item of tmpList[prj].taskList){
-            let task = new Task();
-            Object.assign(task, item);
+            let task = new TodoTask(item.title, item.date, item.priority, item.description);
+            task.id = item.id;
             newPrj.addTask(task);
         }
         projectList[prj] = newPrj;

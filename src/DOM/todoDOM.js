@@ -1,6 +1,8 @@
-import { Task } from "../task";
-import { addTaskToProject, saveTaskChanged } from "../Manager/projectManager";
+import { TodoTask } from "../task";
+import { addTaskToProject, projectList, saveTaskChanged } from "../Manager/projectManager";
 import { observer } from "../Tools/observer";
+
+
 export function initAddTask(projectName){
     let newTaskDialog = document.querySelector(".new-task-dialog");
     let addTaskForm = newTaskDialog.querySelector(".new-task-form");
@@ -40,7 +42,7 @@ function createTask(form){
     let taskPriority = form.querySelector("#task-priority").value;
     let taskDate = form.querySelector("#task-date").value;
     let taskDesc = form.querySelector("#task-description").value;
-    let task = new Task(taskTitle, taskDate, taskPriority, taskDesc);
+    let task = new TodoTask(taskTitle, taskDate, taskPriority, taskDesc);
     return task;
 }
 
@@ -49,14 +51,18 @@ export function displayTask(task){
     let taskContainer = document.querySelector(".task-container");
     let taskElem = createTaskElement(task);
     taskContainer.appendChild(taskElem);
-    observer.add("Complete Task", removeTaskElement);
+    
+    
 }
 
 // crete html element of task
 export function createTaskElement(task){
     let completeBtn = document.createElement("button");
     completeBtn.textContent = "Complete";
-    completeBtn.addEventListener("click", task.completeTask.bind(task));
+    completeBtn.addEventListener("click", e =>{ 
+        removeTaskElement(task);
+        
+    });
 
     //main element
     let taskCard = document.createElement("div");
@@ -129,22 +135,20 @@ function editTask(task, taskCard){
         //reflect the change to the task element
         let newTaskCard = createTaskElement(task);
         taskCard.parentNode.replaceChild(newTaskCard, taskCard);
-        saveTask();
+        saveTaskChanged();
     });
     newTaskDialog.showModal();
 }
 
-function saveTask(){
-    saveTaskChanged();
-}
-
 
 //remove task element from the container
-function removeTaskElement(task){
+export function removeTaskElement(task){
     let tasks = document.querySelectorAll(".task-item");
     for (let item of tasks){
         if (task.id === item.dataset.id){
             item.remove();
+            task.completeTask();
+            saveTaskChanged();
             // observer.remove("Complete Task", removeTaskElement);
             break;
         }

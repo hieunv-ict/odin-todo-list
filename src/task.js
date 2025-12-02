@@ -1,6 +1,6 @@
 import { observer } from "./Tools/observer";
-import { saveTaskChanged } from "./Manager/projectManager";
-export class Task{
+
+export class TodoTask{
     title; //string
     priority; //a number for prototyping
     date;
@@ -15,8 +15,6 @@ export class Task{
     }
 }
 
-Task.prototype.completeTask = function(){
-    console.log("complete");
+TodoTask.prototype.completeTask = function(){
     observer.emit("Complete Task", this);
-    saveTaskChanged();
 }

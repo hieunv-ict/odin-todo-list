@@ -4,7 +4,6 @@ let observer = {
     add: function(eventName, func){
         this.events[eventName] = this.events[eventName] || [];
         if (!this.checkDuplicateFunc(eventName, func)){
-
             this.events[eventName].push(func);
         }
         
@@ -22,7 +21,6 @@ let observer = {
     emit: function(eventName, data){
         if (this.events[eventName])
         for (let func of this.events[eventName]){
-            console.log(func);
             func(data);
         }
     },

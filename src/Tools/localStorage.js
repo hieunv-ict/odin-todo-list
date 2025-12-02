@@ -35,8 +35,10 @@ export function loadLocalStorage(){
 
 function loadData(){
     observer.add("Save Data", saveChange);
-    
-    if (localStorage.length === 0){
+    let jsonStr = localStorage.getItem("projects") || null;
+    let projects = JSON.parse(jsonStr);
+    let len = Object.keys(projects).length || 0;
+    if (len === 0){
         let defaultProject = new Project(DEFAULT_PROJECT_NAME);
         projectList[DEFAULT_PROJECT_NAME] = defaultProject;
         populateStorage(projectList);
@@ -44,15 +46,13 @@ function loadData(){
     else{
         deserialize();
     }
-    console.log(projectList);
+    
     displayData();
 }
 
 function populateStorage(dict){
-    for (let key in dict){
-      let jsonVal = JSON.stringify(dict[key]);
-      localStorage.setItem(key, jsonVal);
-    }
+    let jsonVal = JSON.stringify(dict);
+    localStorage.setItem("projects", jsonVal);
 }
 
 function saveChange(projects){
@@ -62,13 +62,8 @@ function saveChange(projects){
 
 
 function deserialize(){
-    let len = localStorage.length;
-    let tmpList = {};
-    for (let i = 0; i < len; i++){
-      let jsonText = localStorage.getItem(localStorage.key(i));
-      let project = JSON.parse(jsonText);
-      tmpList[localStorage.key(i)] = project; 
-    }
-    setProjectList(tmpList);
-    
+  let jsonText = localStorage.getItem("projects");
+  let projects = JSON.parse(jsonText);
+  setProjectList(projects);
+
 }
