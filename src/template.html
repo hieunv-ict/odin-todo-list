@@ -8,6 +8,7 @@
 <body>
     <div class="main-container">
         <div class="sidebar">
+            <h1>Todo List</h1>
             <button class="btn new-task-btn">Add Task</button>
             <button class="btn new-prj-btn">Add Project</button>
             <div class="prj-container">
@@ -27,20 +28,20 @@
     <dialog class="new-task-dialog">
         <form method="dialog" class="new-task-form">
             <input type="text" id="task-title" name="task-title" placeholder="Task Title" required class="input">
-            <textarea name="task-description" id="task-description" value="" class="input"></textarea>
+            <input type="text" name="task-description" id="task-description" value="" class="input" placeholder="description">
             
             <div class="task-subinfo">
-                <input type="date" name="task-date" id="task-date" required class="input">
+                <input type="date" name="task-date" id="task-date" placehold="Due Date" required class="input">
                 <select name="priority" id="task-priority" required class="input">
-                    <option value="">Choose priority</option>
+                    <option value="">Priority</option>
                     <option value="High">High priority</option>
                     <option value="Normal">Normal priority</option>
                     <option value="Low">Low priority</option>
                 </select>
             </div>
-            <p>
-                <button class="cancel-btn btn">Cancel</button>
-                <button type="submit" class="add-task-btn btn">Add</button>
+            <p class="form-btn-container">
+                <button class="cancel-btn form-btn">Cancel</button>
+                <button type="submit" class="add-task-btn form-btn">Add</button>
             </p>
             
             
@@ -51,8 +52,11 @@
             <h2>Add Project</h2>
             <input type="text" id="prj-title" name="prj-title" placeholder="Project Title" required class="input">
             
-            <button type="submit" class="cancel-btn btn">Cancel</button>
-            <button type="submit" class="add-task-btn btn">Add</button>
+            <p class="form-btn-container">
+                <button type="submit" class="cancel-btn form-btn">Cancel</button>
+                <button type="submit" class="add-task-btn form-btn">Add</button>
+            </p>
+            
             
         </form>
     </dialog>

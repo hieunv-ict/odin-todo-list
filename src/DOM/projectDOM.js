@@ -45,7 +45,7 @@ addPrjForm.addEventListener("submit", e =>{
     if (!projectList[prjTitle]){
         projectList[prjTitle] = newPrj;
         let prjItem = createPrjItem(newPrj);
-        prjItem.querySelector(".prj-title").addEventListener("click", e=> openProject(newPrj));
+        prjItem.addEventListener("click", e=> openProject(newPrj));
         prjContainer.appendChild(prjItem);
         observer.emit("Save Data", projectList);
     }
@@ -93,8 +93,9 @@ function deleteProjectElem(prj){
             let task = prj.taskList[0];
             removeTaskElement(task);
         }
-        window.location.reload();
+        
     }
+    window.location.reload();
     
 }
 
@@ -111,12 +112,6 @@ function openProject(project){
     let prjTitle = document.createElement("h2");
     prjTitle.textContent = project.name + "'s tasks";
     prjTitle.classList.add("prj-title-content");
-    // project page has an add task button for only that project
-    // let addTaskBtn = document.createElement("button");
-    // addTaskBtn.textContent = "Add Task";
-    // addTaskBtn.classList.add(".new-task-btn");
-    // addTaskBtn.addEventListener("click", e => openNewTaskForm());
-    // mainContent.appendChild(addTaskBtn);
     initAddTask(project.name);
     
 

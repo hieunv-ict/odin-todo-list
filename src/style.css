@@ -2,6 +2,11 @@ body{
     font-family: Arial, Helvetica, sans-serif;
 }
 
+p{
+    margin: 2px;
+}
+
+
 .task-item{
     padding: 10px 20px;
     border-bottom: solid 2px #d1d5db;
@@ -22,7 +27,7 @@ body{
 .task-item > .details > div{
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: start;
     padding: 5px 10px;
     border-radius: 5px;
     border: solid 2px black;
@@ -30,9 +35,10 @@ body{
 }
 
 
+
 .main-container{
     display: grid;
-    grid-template-columns: 1fr 5fr;
+    grid-template-columns: minmax(200px, 1fr) 5fr;
     grid-template-rows: 1fr;
 
 }
@@ -54,9 +60,6 @@ body{
     grid-template-rows: repeat(1fr);
     gap: 20px;
 }
-.prj-item{
-    border-radius: 10px;
-}
 
 .task-container{
     display: grid;
@@ -64,32 +67,7 @@ body{
     grid-template-rows: repeat(auto-fit, 1fr);
     gap: 20px;
 }
-.prj-item{
-    padding: 10px 10px;
-}
 
-.new-task-dialog{
-    width: 30vw;
-    height: 22vh;
-    padding: 8px 12px;
-}
-.new-task-form{
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    justify-content: space-between;
-}
-.new-task-form > *{
-    border: none;
-    outline: none;
-    margin: none;
-}
-.task-subinfo{
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    margin: 0;
-}
 #task-title{
     border: none;
     height: 5vh;
@@ -104,9 +82,12 @@ body{
 }
 
 .prj-item{
+    border-radius: 10px;
+    padding: 10px 10px;
     background-color: burlywood;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .high-priority{
@@ -132,4 +113,71 @@ body{
     border-radius: 15px;
     font-size: 1.2rem;
     font-weight: 700;
+}
+
+.prj-item > button{
+    background-color:chocolate;
+    height: max(5vh, 15px);
+    width: max(4vw, 60px);
+    border-radius: 10px;
+}
+.task-item > button{
+    background-color: cornflowerblue;
+    border-radius: 10px;
+}
+
+/* Form styling */
+dialog{
+    border-radius: 20px;
+}
+
+.new-task-dialog{
+    width: 30vw;
+    height: 22vh;
+    padding: 8px 12px;
+}
+.new-task-form{
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    justify-content: space-between;
+}
+.new-prj-form{
+    width: max(30vw, 300px);
+    height: max(8vh, 150px);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    justify-content: space-between;
+}
+.new-task-form > *{
+    border: none;
+    outline: none;
+    margin: none;
+}
+
+.task-subinfo{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    margin: 0;
+    gap: 10px;
+
+}
+.form-btn{
+    border-radius: 5px;
+    background-color:#d1453b
+}
+
+.form-btn-container{
+    align-self: end;
+}
+
+input[type=date]{
+    height: 3.5vh;
+}
+
+select{
+    height: 4vh;
 }

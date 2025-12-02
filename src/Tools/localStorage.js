@@ -38,7 +38,6 @@ function loadData(){
     let jsonStr = localStorage.getItem("projects") || null;
     let projects = JSON.parse(jsonStr);
     let len = 0;
-    console.log(projects);
     if (projects != null){
       len = Object.keys(projects).length;
     }
