@@ -8,7 +8,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack serve --open --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js"
+    "build": "webpack --config webpack.prod.js",
+    "commit-to-deploy": "git add dist -f && git commit -m \"Deployment commit\"",
+    "push-to-deploy": "git subtree push --prefix dist origin"
   },
   "devDependencies": {
     "css-loader": "^7.1.2",

@@ -1,6 +1,18 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+p{
+    margin: 2px;
+}
+
+
 .task-item{
     padding: 10px 20px;
     border-bottom: solid 2px #d1d5db;
+    background-color:beige;
+    border: solid 2px grey;
+    border-radius: 10px;
 }
 .task-item:hover{
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -8,45 +20,54 @@
     transform: translateY(-1px);
 }
 .task-item > .details{
-    padding: 0 18px;
     display: none;
     overflow: hidden;
-    background-color: #f1f1f1;
+    /* background-color: #f1f1f1; */
 }
+.task-item > .details > div{
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: solid 2px black;
+    background-color: burlywood;
+}
+
+
 
 .main-container{
     display: grid;
-    grid-template-columns: 1fr 4fr;
+    grid-template-columns: minmax(200px, 1fr) 5fr;
+    grid-template-rows: 1fr;
+
 }
 
 .sidebar{
     background-color: blanchedalmond;
     display: flex;
     flex-direction: column;
+    height: 100vh;
+    padding: 10px 20px;
+    gap: 10px;
+}
+.content{
+    padding: 20px 30px;
+}
+.prj-container{
+    margin-top: 30px;
+    display: grid;
+    grid-template-rows: repeat(1fr);
+    gap: 20px;
 }
 
-.new-task-dialog{
-    width: 30vw;
-    height: 22vh;
-    padding: 8px 12px;
+.task-container{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-rows: repeat(auto-fit, 1fr);
+    gap: 20px;
 }
-.new-task-form{
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    justify-content: space-between;
-}
-.new-task-form > *{
-    border: none;
-    outline: none;
-    margin: none;
-}
-.task-subinfo{
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    margin: 0;
-}
+
 #task-title{
     border: none;
     height: 5vh;
@@ -61,9 +82,12 @@
 }
 
 .prj-item{
+    border-radius: 10px;
+    padding: 10px 10px;
     background-color: burlywood;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .high-priority{
@@ -74,4 +98,86 @@
 }
 .low-priority{
     color:#246fe0
+}
+
+.task-item > h2:hover{
+    color:red;
+    background-color: antiquewhite;
+    /* border-color: #d1d5db; */
+    transform: translateY(-1px);
+}
+
+.btn{
+    background-color:#d1453b;
+    height: 8vh;
+    border-radius: 15px;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.prj-item > button{
+    background-color:chocolate;
+    height: max(5vh, 15px);
+    width: max(4vw, 60px);
+    border-radius: 10px;
+}
+.task-item > button{
+    background-color: cornflowerblue;
+    border-radius: 10px;
+}
+
+/* Form styling */
+dialog{
+    border-radius: 20px;
+}
+
+.new-task-dialog{
+    width: 30vw;
+    height: 22vh;
+    padding: 8px 12px;
+}
+.new-task-form{
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    justify-content: space-between;
+}
+.new-prj-form{
+    width: max(30vw, 300px);
+    height: max(8vh, 150px);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    justify-content: space-between;
+}
+.new-task-form > *{
+    border: none;
+    outline: none;
+    margin: none;
+}
+
+.task-subinfo{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    margin: 0;
+    gap: 10px;
+
+}
+.form-btn{
+    border-radius: 5px;
+    background-color:#d1453b
+}
+
+.form-btn-container{
+    align-self: end;
+}
+
+input[type=date]{
+    height: 3.5vh;
+}
+
+select{
+    height: 4vh;
 }

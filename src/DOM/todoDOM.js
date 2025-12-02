@@ -1,6 +1,7 @@
-import { Task } from "../task";
-import { addTaskToProject, DEFAULT_PROJECT_NAME } from "../Manager/projectManager";
+import { TodoTask } from "../task";
+import { addTaskToProject, projectList, saveTaskChanged } from "../Manager/projectManager";
 import { observer } from "../Tools/observer";
+
 
 export function initAddTask(projectName){
     let newTaskDialog = document.querySelector(".new-task-dialog");
@@ -23,7 +24,7 @@ export function initAddTask(projectName){
     });
 }
 
-initAddTask(DEFAULT_PROJECT_NAME);
+//initAddTask(DEFAULT_PROJECT_NAME);
 // open form for adding task
 export function openNewTaskForm(){
     // open dialog form
@@ -33,7 +34,6 @@ export function openNewTaskForm(){
 function priorityClass(task){
     let pri = task.priority;
     let res = pri.toLowerCase() + "-priority";
-    console.log(res);
     return res;
 }
  // create new Task object
@@ -42,23 +42,27 @@ function createTask(form){
     let taskPriority = form.querySelector("#task-priority").value;
     let taskDate = form.querySelector("#task-date").value;
     let taskDesc = form.querySelector("#task-description").value;
-    let task = new Task(taskTitle, taskDate, taskPriority, taskDesc);
+    let task = new TodoTask(taskTitle, taskDate, taskPriority, taskDesc);
     return task;
 }
 
 // display new task to the page
-function displayTask(task){
+export function displayTask(task){
     let taskContainer = document.querySelector(".task-container");
     let taskElem = createTaskElement(task);
     taskContainer.appendChild(taskElem);
-    observer.add("Complete Task", removeTaskElement);
+    
+    
 }
 
 // crete html element of task
 export function createTaskElement(task){
     let completeBtn = document.createElement("button");
     completeBtn.textContent = "Complete";
-    completeBtn.addEventListener("click", e => task.completeTask());
+    completeBtn.addEventListener("click", e =>{ 
+        removeTaskElement(task);
+        
+    });
 
     //main element
     let taskCard = document.createElement("div");
@@ -67,7 +71,7 @@ export function createTaskElement(task){
     let cardTitle = document.createElement("h2");
     cardTitle.textContent = task.title;
     let cardDate = document.createElement("p");
-    cardDate.textContent = task.date;
+    cardDate.textContent = "Due date: " + task.date;
     //hidden element
     let hiddenDetails = document.createElement("div");
     hiddenDetails.classList.add("details");
@@ -75,9 +79,12 @@ export function createTaskElement(task){
     cardDesc.textContent = task.description;
     let editBtn = document.createElement("button");
     editBtn.textContent = "Edit";
-    editBtn.addEventListener("click", e => editTask(task, taskCard));
-    hiddenDetails.appendChild(cardDesc);
-    hiddenDetails.appendChild(editBtn);
+    editBtn.addEventListener("click", e => {editTask(task, taskCard);});
+
+    let infoContainer = document.createElement("div");
+    infoContainer.appendChild(cardDesc);
+    infoContainer.appendChild(editBtn);
+    hiddenDetails.appendChild(infoContainer);
     // add data attribute of task id to task card
     taskCard.dataset.id = task.id;
     taskCard.appendChild(completeBtn);
@@ -87,12 +94,13 @@ export function createTaskElement(task){
     
     collapsibleElem(hiddenDetails);
     function collapsibleElem(content){
-        taskCard.addEventListener("click", e =>{
+        cardTitle.addEventListener("click", e =>{
             if (content.style.display === "block") {
             content.style.display = "none";
             } 
             else {
             content.style.display = "block";
+
             }
         })
     }
@@ -131,19 +139,21 @@ function editTask(task, taskCard){
         //reflect the change to the task element
         let newTaskCard = createTaskElement(task);
         taskCard.parentNode.replaceChild(newTaskCard, taskCard);
-
+        saveTaskChanged();
     });
     newTaskDialog.showModal();
 }
 
 
 //remove task element from the container
-function removeTaskElement(task){
+export function removeTaskElement(task){
     let tasks = document.querySelectorAll(".task-item");
     for (let item of tasks){
         if (task.id === item.dataset.id){
             item.remove();
-            observer.remove("Complete Task", removeTaskElement);
+            task.completeTask();
+            saveTaskChanged();
+            // observer.remove("Complete Task", removeTaskElement);
             break;
         }
     }
