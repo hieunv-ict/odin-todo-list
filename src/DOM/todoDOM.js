@@ -80,8 +80,11 @@ export function createTaskElement(task){
     let editBtn = document.createElement("button");
     editBtn.textContent = "Edit";
     editBtn.addEventListener("click", e => {editTask(task, taskCard);});
-    hiddenDetails.appendChild(cardDesc);
-    hiddenDetails.appendChild(editBtn);
+
+    let infoContainer = document.createElement("div");
+    infoContainer.appendChild(cardDesc);
+    infoContainer.appendChild(editBtn);
+    hiddenDetails.appendChild(infoContainer);
     // add data attribute of task id to task card
     taskCard.dataset.id = task.id;
     taskCard.appendChild(completeBtn);
@@ -97,6 +100,7 @@ export function createTaskElement(task){
             } 
             else {
             content.style.display = "block";
+
             }
         })
     }
