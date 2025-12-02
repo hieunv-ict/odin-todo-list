@@ -37,7 +37,12 @@ function loadData(){
     observer.add("Save Data", saveChange);
     let jsonStr = localStorage.getItem("projects") || null;
     let projects = JSON.parse(jsonStr);
-    let len = Object.keys(projects).length || 0;
+    let len = 0;
+    console.log(projects);
+    if (projects != null){
+      len = Object.keys(projects).length;
+    }
+
     if (len === 0){
         let defaultProject = new Project(DEFAULT_PROJECT_NAME);
         projectList[DEFAULT_PROJECT_NAME] = defaultProject;

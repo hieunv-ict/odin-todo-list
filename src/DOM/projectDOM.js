@@ -109,14 +109,16 @@ function openProject(project){
 
     //project title
     let prjTitle = document.createElement("h2");
-    prjTitle.textContent = project.name;
+    prjTitle.textContent = project.name + "'s tasks";
     prjTitle.classList.add("prj-title-content");
     // project page has an add task button for only that project
-    let addTaskBtn = document.createElement("button");
-    addTaskBtn.textContent = "Add Task";
-    addTaskBtn.classList.add(".new-task-btn");
+    // let addTaskBtn = document.createElement("button");
+    // addTaskBtn.textContent = "Add Task";
+    // addTaskBtn.classList.add(".new-task-btn");
+    // addTaskBtn.addEventListener("click", e => openNewTaskForm());
+    // mainContent.appendChild(addTaskBtn);
     initAddTask(project.name);
-    addTaskBtn.addEventListener("click", e => openNewTaskForm());
+    
 
     //render tasks of the chosen projecct and other elements
 
@@ -129,6 +131,6 @@ function openProject(project){
     for (let i = 0; i < projectTasks.length; i++){
         displayTask(projectTasks[i]);
     }
-    mainContent.appendChild(addTaskBtn);
+    
 
 }
