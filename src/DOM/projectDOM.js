@@ -1,6 +1,6 @@
 import { Project } from "../project";
 import { createTaskElement, initAddTask, openNewTaskForm } from "./todoDOM";
-import { projectList, DEFAULT_PROJECT_NAME } from "../projectManager";
+import { projectList, DEFAULT_PROJECT_NAME } from "../Manager/projectManager";
 let prjContainer = document.querySelector(".prj-container");
 
 //display default project tasks and list of projects when the page is loaded

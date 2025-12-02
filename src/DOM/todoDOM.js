@@ -1,5 +1,5 @@
 import { Task } from "../task";
-import { addTaskToProject, DEFAULT_PROJECT_NAME } from "../projectManager";
+import { addTaskToProject, DEFAULT_PROJECT_NAME } from "../Manager/projectManager";
 import { observer } from "../Tools/observer";
 
 export function initAddTask(projectName){
@@ -30,6 +30,12 @@ export function openNewTaskForm(){
     document.querySelector(".new-task-dialog").showModal();
 }
 
+function priorityClass(task){
+    let pri = task.priority;
+    let res = pri.toLowerCase() + "-priority";
+    console.log(res);
+    return res;
+}
  // create new Task object
 function createTask(form){
     let taskTitle = form.querySelector("#task-title").value;
@@ -43,7 +49,8 @@ function createTask(form){
 // display new task to the page
 function displayTask(task){
     let taskContainer = document.querySelector(".task-container");
-    taskContainer.appendChild(createTaskElement(task));
+    let taskElem = createTaskElement(task);
+    taskContainer.appendChild(taskElem);
     observer.add("Complete Task", removeTaskElement);
 }
 
@@ -52,25 +59,83 @@ export function createTaskElement(task){
     let completeBtn = document.createElement("button");
     completeBtn.textContent = "Complete";
     completeBtn.addEventListener("click", e => task.completeTask());
+
+    //main element
     let taskCard = document.createElement("div");
     taskCard.classList.add("task-item");
+    taskCard.classList.add(priorityClass(task));
     let cardTitle = document.createElement("h2");
     cardTitle.textContent = task.title;
     let cardDate = document.createElement("p");
     cardDate.textContent = task.date;
-    let cardPriority = document.createElement("p");
-    cardPriority.textContent = task.priority;
+    //hidden element
+    let hiddenDetails = document.createElement("div");
+    hiddenDetails.classList.add("details");
     let cardDesc = document.createElement("p");
     cardDesc.textContent = task.description;
+    let editBtn = document.createElement("button");
+    editBtn.textContent = "Edit";
+    editBtn.addEventListener("click", e => editTask(task, taskCard));
+    hiddenDetails.appendChild(cardDesc);
+    hiddenDetails.appendChild(editBtn);
     // add data attribute of task id to task card
     taskCard.dataset.id = task.id;
     taskCard.appendChild(completeBtn);
-    taskCard.appendChild(cardTitle);
-    taskCard.appendChild(cardPriority);
-    taskCard.appendChild(cardDesc);
+    taskCard.appendChild(cardTitle)
     taskCard.appendChild(cardDate);
+    taskCard.appendChild(hiddenDetails);
+    
+    collapsibleElem(hiddenDetails);
+    function collapsibleElem(content){
+        taskCard.addEventListener("click", e =>{
+            if (content.style.display === "block") {
+            content.style.display = "none";
+            } 
+            else {
+            content.style.display = "block";
+            }
+        })
+    }
     return taskCard;
 }
+
+function editTask(task, taskCard){
+    //open form for editting
+    let newTaskDialog = document.querySelector(".new-task-dialog");
+    let addTaskForm = newTaskDialog.querySelector(".new-task-form");
+    
+    // clone form node to new variable to remove old event listener
+    let formClone = addTaskForm.cloneNode(true);
+    addTaskForm.parentNode.replaceChild(formClone, addTaskForm);
+
+    //set form's input value to task's properties
+    formClone.querySelector("#task-title").value = task.title;
+    formClone.querySelector("#task-priority").value = task.priority;
+    formClone.querySelector("#task-date").value = task.date;
+    formClone.querySelector("#task-description").value = task.description;
+
+
+    let cancelBtn = formClone.querySelector(".cancel-btn");
+    // cancel button clicked -> close the dialog and not create new task
+    cancelBtn.addEventListener("click", e =>{e.preventDefault(); newTaskDialog.close()});
+
+    // submit button clicked with all input filled -> create new task 
+    formClone.addEventListener("submit", e =>{
+        //change task properties
+        let newTask = createTask(formClone);
+        task.title = newTask.title;
+        task.date = newTask.date;
+        task.description = newTask.description;
+        task.priority = newTask.priority;
+
+        //reflect the change to the task element
+        let newTaskCard = createTaskElement(task);
+        taskCard.parentNode.replaceChild(newTaskCard, taskCard);
+
+    });
+    newTaskDialog.showModal();
+}
+
 
 //remove task element from the container
 function removeTaskElement(task){
